@@ -6,9 +6,6 @@ else
 default:
 	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
 endif
-
-.PHONY: clean
+.PHONY:clean
 clean:
-	$(MAKE) -C $(KERNELDIR) M=$(PWD) clean
 	-rm *.mod.c *.o *.order *.symvers *.ko
-
