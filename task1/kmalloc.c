@@ -1,28 +1,27 @@
 #include <linux/module.h>  
 #include <linux/slab.h>
 MODULE_LICENSE("GPL");
-/*TODO: allocate 1KB for kmallocmem1*/  
+
 unsigned char *kmallocmem1;  
-/*TODO: allocate 8KB for kmallocmem2*/  
 unsigned char *kmallocmem2;   
-/*TODO: allocate max-allowed size of memory for kmallocmem3*/  
 unsigned char *kmallocmem3;  
-/*TODO: allocate memory lager than max-allowed size for kmallocmem4*/  
 unsigned char *kmallocmem4;
 
 static int __init mem_module_init(void)
 {
     printk("Start kmalloc!\n");
+
     kmallocmem1 = (unsigned char*)kmalloc(1024, GFP_KERNEL);
     if (kmallocmem1 != NULL){
         printk(KERN_ALERT "kmallocmem1 addr = %lx\n", (unsigned long)kmallocmem1);
-    }else{
+    } else{
         printk("Failed to allocate kmallocmem1!\n");
     }
+
     kmallocmem2 = (unsigned char *)kmalloc(8192, GFP_KERNEL);
     if (kmallocmem2 != NULL){
         printk(KERN_ALERT "kmallocmem2 addr = %lx\n", (unsigned long)kmallocmem2);
-    }else{
+    } else{
         printk("Failed to allocate kmallocmem2!\n");
     }
 
@@ -31,18 +30,18 @@ static int __init mem_module_init(void)
     while (kmallocmem3 != NULL)
     {
         kfree(kmallocmem3);
-        kmallocmem3 = (unsigned char*)kmalloc(1024 * i, GFP_KERNEL);
-        i *= 2;
+        kmallocmem3 = (unsigned char*)kmalloc(1024 * ++ i, GFP_KERNEL);
     }
-    i /= 4;
-    printk(KERN_ALERT "Max size = %d KB\n", i);
+    printk(KERN_ALERT "Max size = %d KB\n", -- i);
     kfree(kmallocmem3);
+
     kmallocmem3 = (unsigned char*)kmalloc(1024 * i, GFP_KERNEL);
     if (kmallocmem3 != NULL) {
         printk(KERN_ALERT "kmallocmem3 addr = %lx\n", (unsigned long)kmallocmem3);
     } else {
         printk("Failed to allocate kmallocmem3!\n");
-    } 
+    }
+
     kmallocmem4 = (unsigned char*)kmalloc(1024 * i + 1024, GFP_KERNEL);
     if (kmallocmem4 != NULL) {
         printk(KERN_ALERT "kmallocmem4 addr = %lx\n", (unsigned long)kmallocmem4);
